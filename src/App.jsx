@@ -9,6 +9,9 @@ import Patient from "./pages/patient";
 import Register from "./pages/register";
 import Navbar from "./components/Navbar";
 import { AuthContextProvider } from "./context/AuthContext";
+import PrivateRoute from "./components/PrivateRoute";
+import ProtectedRoute from "./components/ProtectedRoute";
+import Account from "./pages/account";
 
 function App() {
   return (
@@ -17,12 +20,22 @@ function App() {
         <Navbar />
 
         <Routes>
-          <Route path="" element={<Home />} />
-          <Route path="login" element={<Login />} />
+          <Route element={<ProtectedRoute allowedRoles={["admin"]}/>}>
+            <Route element={<Home />} path="/" exact />
+            <Route element={<Admin />} path="/admin" />
+          </Route>
+
+          <Route element={<ProtectedRoute allowedRoles={["admin", "patient"]}/>}>
+            <Route element={<Patient />} path="/patient"  />
+            <Route element={<Account />} path="/account"  />
+          </Route>
+
+          <Route element={<ProtectedRoute allowedRoles={["admin", "doctor"]}/>}>
+            <Route element={<Doctor />} path="/doctor"  />
+          </Route>
+
           <Route path="register" element={<Register />} />
-          <Route path="patient" element={<Patient />} />
-          <Route path="doctor" element={<Doctor />} />
-          <Route path="admin" element={<Admin />} />
+          <Route path="login" element={<Login />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </AuthContextProvider>

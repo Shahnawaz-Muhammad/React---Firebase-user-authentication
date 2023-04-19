@@ -1,10 +1,34 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import { UserAuth } from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const { register, handleSubmit, watch, formState: { errors } } = useForm();
-  const onSubmit = data => console.log(data);
+  const { currentUser, loginUser } = UserAuth();
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm();
+
+  const navigate = useNavigate();
+
+  const handleLogin =  (data) => {
+    const { email, password } = data;
+    try {
+      setError("");
+      setLoading(true);
+       loginUser(email, password);
+      navigate("/");
+    } catch {
+      setError("Failed to Log in");
+    }
+    setLoading(false);
+  };
 
   return (
     <div className="w-full flex justify-center my-8">
@@ -13,7 +37,10 @@ const Login = () => {
           <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
             Sign in to your account
           </h1>
-          <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit(onSubmit)}>
+          <form
+            className="space-y-4 md:space-y-6"
+            onSubmit={handleSubmit(handleLogin)}
+          >
             <div>
               <label
                 htmlFor="email"
@@ -48,6 +75,9 @@ const Login = () => {
                 required=""
               />
             </div>
+            <div>
+              <p>{error}</p>
+            </div>
             <div className="flex items-center justify-between">
               <div className="flex items-start">
                 <div className="flex items-center h-5">
@@ -77,7 +107,6 @@ const Login = () => {
             </div>
             <button
               type="submit"
-
               className="w-full text-slate-600 bg-yellow-500 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
             >
               Sign in

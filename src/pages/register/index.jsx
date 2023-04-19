@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { UserAuth } from "../../context/AuthContext";
 import { auth } from "../../config/firebase";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
   const {
@@ -12,16 +13,24 @@ const Register = () => {
   } = useForm();
 
   const { createUser } = UserAuth();
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const RegisterUser = async (data) => {
-    const { email, password } = data;
-    await createUser(email, password);
-    // try {
-    //   navigate("/login");
-    // } catch {
-    //   console.log("Failed to create an account");
-    // }
+  const navigate = useNavigate();
+
+  const handleRegister = async (data) => {
+    
+    const { email, password, username, role } = data;
+    try {
+      setError("");
+      await createUser(email, password, username, role);
+      navigate("/login");
+    } catch {
+      setError("Failed to create Account");
+    }
+    setLoading(false);
   };
+  
   return (
     <div className="w-full flex justify-center my-8">
       <div className="w-full bg-white rounded-lg shadow shadow-slate-400 md:mt-0 sm:max-w-md xl:p-0 ">
@@ -31,7 +40,7 @@ const Register = () => {
           </h1>
           <form
             className="space-y-4 md:space-y-6"
-            onSubmit={handleSubmit(RegisterUser)}
+            onSubmit={handleSubmit(handleRegister)}
           >
             <div>
               <label
@@ -101,32 +110,72 @@ const Register = () => {
                 required=""
               />
             </div>
-            <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
               <div className="flex items-start">
                 <div className="flex items-center h-5">
                   <input
-                    id="remember"
+                    id="admin"
                     aria-describedby="remember"
-                    type="checkbox"
+                    type="radio"
+                    value={"admin"}
+                    {...register("role", { required: true })}
                     className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
                     required=""
                   />
                 </div>
                 <div className="ml-3 text-sm">
                   <label
-                    htmlFor="remember"
+                    htmlFor="admin"
                     className="text-gray-500 dark:text-gray-300"
                   >
-                    Remember me
+                    Admin
                   </label>
                 </div>
               </div>
-              <a
-                href="#"
-                className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500"
-              >
-                Forgot password?
-              </a>
+
+              <div className="flex items-start">
+                <div className="flex items-center h-5">
+                  <input
+                    id="doctor"
+                    aria-describedby="remember"
+                    type="radio"
+                    value={"doctor"}
+                    {...register("role", { required: true })}
+                    className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
+                    required=""
+                  />
+                </div>
+                <div className="ml-3 text-sm">
+                  <label
+                    htmlFor="doctor"
+                    className="text-gray-500 dark:text-gray-300"
+                  >
+                    Doctor
+                  </label>
+                </div>
+              </div>
+
+              <div className="flex items-start">
+                <div className="flex items-center h-5">
+                  <input
+                    id="patient"
+                    aria-describedby="remember"
+                    type="radio"
+                    value={"patient"}
+                    {...register("role", { required: true })}
+                    className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
+                    required=""
+                  />
+                </div>
+                <div className="ml-3 text-sm">
+                  <label
+                    htmlFor="patient"
+                    className="text-gray-500 dark:text-gray-300"
+                  >
+                    Patient
+                  </label>
+                </div>
+              </div>
             </div>
             <button
               type="submit"
