@@ -6,12 +6,13 @@ const ProtectedRoute = ({ allowedRoles }) => {
   const { currentUser } = UserAuth();
 //   console.log("protected route user---------->", currentUser.role)
   let location = useLocation();
+  
 
 //   if (!allowedRoles.includes(currentUser.role)) {
 //     return <Navigate to="/login" state={{ from: location }} />;
 //   }
 
-  return currentUser ? (
+  return currentUser && allowedRoles.includes(currentUser?.role) ? (
     <Outlet />
   ) : (
     <Navigate to="/login" state={{ from: location }} replace />

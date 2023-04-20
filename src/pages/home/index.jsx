@@ -10,11 +10,13 @@ const Home = () => {
   }
   return (
     <>
-      Home Page
+      <div className="px-10 py-10">
+      <p className="text-center text-2xl uppercase font-bold"> {currentUser.role}</p>
+
       <div>
       <h1>Welcome, {currentUser.email}!</h1>
       <p>Your UID is: {currentUser.uid}</p>
-      {/* <p>Your role is: {currentUser.role}</p> */}
+      </div>
       {/* Render any other user data here */}
     </div>
     </>

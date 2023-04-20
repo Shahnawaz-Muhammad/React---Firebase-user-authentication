@@ -12,6 +12,8 @@ import { AuthContextProvider } from "./context/AuthContext";
 import PrivateRoute from "./components/PrivateRoute";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Account from "./pages/account";
+import DoctorList from "./pages/doctor/DoctorList";
+import PatientList from "./pages/patient/PatientList";
 
 function App() {
   return (
@@ -23,6 +25,8 @@ function App() {
           <Route element={<ProtectedRoute allowedRoles={["admin"]}/>}>
             <Route element={<Home />} path="/" exact />
             <Route element={<Admin />} path="/admin" />
+            <Route element={<DoctorList />} path="/doctor-list" />
+            <Route element={<PatientList />} path="/patient-list" />
           </Route>
 
           <Route element={<ProtectedRoute allowedRoles={["admin", "patient"]}/>}>

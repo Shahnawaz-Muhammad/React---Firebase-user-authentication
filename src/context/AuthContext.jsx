@@ -50,6 +50,12 @@ export const AuthContextProvider = ({ children }) => {
     return signOut(auth);
   };
 
+  const referPatient =async () => {
+    await setDoc(doc(db, "users", user.uid), where("role",  "==", "doctor" )),{
+      referedPatient:[]
+    }
+  }
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (userAuth) => {
       if (userAuth) {
@@ -78,6 +84,7 @@ export const AuthContextProvider = ({ children }) => {
         loginUser,
         logout,
         currentUser,
+        referPatient
         // isAuthenticated,
         // userRole,
         // allowedRoutes,

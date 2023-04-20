@@ -3,12 +3,9 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import { UserAuth } from "../context/AuthContext";
 
 const Navbar = () => {
-  const navItems = [
-    { id: 1, title: "home", url: "" },
-  ];
   const { currentUser, logout } = UserAuth();
-  console.log("navbar user",currentUser)
-  
+  console.log("navbar user", currentUser);
+
   const navigate = useNavigate();
 
   const handleLogout = async () => {
@@ -26,27 +23,51 @@ const Navbar = () => {
         <h2 className="text-xl font-bold text-uppercase">LOGO</h2>
         <div>
           <ul className="flex flex-row justify-between gap-5 items-center uppercase text-lg cursor-pointer">
-            {navItems.map((item) => {
-              return (
-                <li
-                  className=" border-yellow-500 hover:border-b-2 ease-in"
-                  key={item.id}
-                >
-                  <NavLink to={`/${item.url}`}>{item.title}</NavLink>
-                </li>
-              );
-            })}
+            {currentUser && (
+              <>
+                {currentUser.role === "admin" && (
+                  <>
+                    <li className=" border-yellow-500 hover:border-b-2 ease-in">
+                      <NavLink to={`/`}>HOME</NavLink>
+                    </li>
+                    <li className=" border-yellow-500 hover:border-b-2 ease-in">
+                      <NavLink to={`/doctor-list`}>Doctors</NavLink>
+                    </li>
+                    <li className=" border-yellow-500 hover:border-b-2 ease-in">
+                      <NavLink to={`/patient-list`}>Patients</NavLink>
+                    </li>
+                    {/* <li className=" border-yellow-500 hover:border-b-2 ease-in">
+                      <NavLink to={`/admin`}>ADMIN</NavLink>
+                    </li> */}
+                  </>
+                )}
+                {currentUser.role === "doctor" && (
+                  <>
+                    <li className=" border-yellow-500 hover:border-b-2 ease-in">
+                      <NavLink to={`/doctor`}>DOCTOR</NavLink>
+                    </li>
+                  </>
+                )}
+                {currentUser.role === "patient" && (
+                  <>
+                    <li className=" border-yellow-500 hover:border-b-2 ease-in">
+                      <NavLink to={`/patient`}>PATIENT</NavLink>
+                    </li>
+                  </>
+                )}
+              </>
+            )}
 
             <div className="flex gap-2">
-              {currentUser ?  (
+              {currentUser ? (
                 <>
-                  <Link
+                  {/* <Link
                     type="button"
                     to="/account"
                     className="bg-transparent px-3 py-1 border-2 border-yellow-500 rounded-md"
                   >
                     Account
-                  </Link>
+                  </Link> */}
                   <button
                     type="button"
                     onClick={handleLogout}

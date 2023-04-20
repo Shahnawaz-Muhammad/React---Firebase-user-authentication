@@ -17,13 +17,21 @@ const Login = () => {
 
   const navigate = useNavigate();
 
-  const handleLogin =  (data) => {
+  const handleLogin =async (data) => {
     const { email, password } = data;
     try {
       setError("");
       setLoading(true);
-       loginUser(email, password);
-      navigate("/");
+      await loginUser(email, password);
+      if (currentUser.role === "admin") {
+        navigate("/");
+      }
+      if (currentUser.role === "patient") {
+        navigate("/patient");
+      }
+      if (currentUser.role === "doctor") {
+        navigate("/doctor");
+      }
     } catch {
       setError("Failed to Log in");
     }
